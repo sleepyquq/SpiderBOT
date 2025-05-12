@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='UTF-8'>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GruBot Control</title>
+    <style>
+        :root {
+            --bg-dark: #1a1d21;
+            --bg-card: #242931;
+            --text-color: #ffffff;
+            --primary-color: #28a745;
+            --danger-color: #dc3545;
+            --secondary-color: #3d8af7;
+            --purple-color: #9b4dca;
+            --orange-color: #fd7e14;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: var(--bg-card);
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 1.5em;
+        }
+        .status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+        }
+        .container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+        .card {
+            background-color: var(--bg-card);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .card-title {
+            margin: 0 0 20px 0;
+            font-size: 1.2em;
+            color: #8f9498;
+        }
+        .btn-group {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .btn {
+            padding: 15px;
+            border: none;
+            border-radius: 6px;
+            color: var(--text-color);
+            font-weight: bold;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        .btn:hover {
+            opacity: 0.8;
+        }
+        .btn-primary {
+            background-color: var(--primary-color);
+        }
+        .btn-danger {
+            background-color: var(--danger-color);
+        }
+        .btn-secondary {
+            background-color: var(--secondary-color);
+        }
+        .btn-purple {
+            background-color: var(--purple-color);
+        }
+        .btn-orange {
+            background-color: var(--orange-color);
+        }
+        .movement-pad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            justify-items: center;
+        }
+        .movement-pad .btn {
+            width: 100%;
+        }
+        .center-btn {
+            grid-column: 2;
+        }
+        .action-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>GruBot Control</h1>
+        <div class="status">
+            <div class="status-dot"></div>
+            <span>已连接</span>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="main-controls">
+            <div class="card">
+                <h2 class="card-title">基本动作</h2>
+                <div class="movement-pad">
+                    <div></div>
+                    <button class="btn btn-primary" onclick="sendCommand('forward')">前进</button>
+                    <div></div>
+                    <button class="btn btn-primary" onclick="sendCommand('left')">左转</button>
+                    <button class="btn btn-danger" onclick="sendCommand('stop')">停止</button>
+                    <button class="btn btn-primary" onclick="sendCommand('right')">右转</button>
+                    <div></div>
+                    <button class="btn btn-primary" onclick="sendCommand('backward')">后退</button>
+                    <div></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 class="card-title">姿态控制</h2>
+                <div class="action-grid">
+                    <button class="btn btn-secondary" onclick="sendCommand('stand')">站立</button>
+                    <button class="btn btn-secondary" onclick="sendCommand('sit')">坐下</button>
+                    <button class="btn btn-secondary" onclick="sendCommand('wave')">挥手</button>
+                    <button class="btn btn-secondary" onclick="sendCommand('dance')">跳舞</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 class="card-title">高级动作</h2>
+                <div class="action-grid">
+                    <button class="btn btn-purple" onclick="sendCommand('body_left')">身体左移</button>
+                    <button class="btn btn-purple" onclick="sendCommand('body_right')">身体右移</button>
+                    <button class="btn btn-purple" onclick="sendCommand('head_up')">头部上抬</button>
+                    <button class="btn btn-purple" onclick="sendCommand('head_down')">头部下压</button>
+                    <button class="btn btn-orange" onclick="sendCommand('wave')">摆手</button>
+                    <button class="btn btn-orange" onclick="sendCommand('shake')">握手</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 模拟发送命令（仅用于预览）
+        function sendCommand(cmd) {
+            console.log('发送命令:', cmd);
+        }
+
+        // 模拟连接状态（仅用于预览）
+        function checkConnection() {
+            const statusDot = document.querySelector('.status-dot');
+            // 随机模拟连接状态
+            const isConnected = Math.random() > 0.2;
+            statusDot.style.backgroundColor = isConnected ? 'var(--primary-color)' : 'var(--danger-color)';
+        }
+
+        // 定期检查连接状态
+        setInterval(checkConnection, 5000);
+    </script>
+</body>
+</html> 

@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SpiderBot 高级控制中心</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .gauge {
+            background: linear-gradient(90deg, #0f172a 0%, #1e40af 50%, #10b981 100%);
+        }
+        .neuron-grid {
+            background-image: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        .serial-console {
+            font-family: monospace;
+            font-size: 12px;
+            line-height: 1.5;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-100 font-sans">
+    <div class="flex h-screen overflow-hidden">
+        <!-- 左侧导航 -->
+        <div class="w-16 bg-gray-800 flex flex-col items-center py-4 space-y-6">
+            <div class="text-green-400 font-bold text-xs">SpiderBot</div>
+            <button class="p-2 rounded-lg hover:bg-gray-700 text-green-400">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+            </button>
+            <button class="p-2 rounded-lg hover:bg-gray-700">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+            </button>
+            <button class="p-2 rounded-lg hover:bg-gray-700">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
+                </svg>
+            </button>
+        </div>
+
+        <!-- 主内容区 -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- 顶部状态栏 -->
+            <div class="bg-gray-800 p-3 flex justify-between items-center">
+                <div class="flex items-center space-x-2">
+                    <span class="text-green-400 font-bold">SpiderBot 高级控制</span>
+                    <span class="text-xs text-gray-400">ID: SPDR-2023-001</span>
+                </div>
+                <div class="flex space-x-4">
+                    <div class="flex items-center space-x-1">
+                        <div class="w-2 h-2 rounded-full bg-green-500"></div>
+                        <span class="text-xs">已连接</span>
+                    </div>
+                    <div class="text-xs text-gray-400">电池: 87%</div>
+                    <button class="text-xs bg-blue-600 hover:bg-blue-700 px-2 py-1 rounded">初始化</button>
+                    <button class="text-xs bg-red-600 hover:bg-red-700 px-2 py-1 rounded">重置</button>
+                </div>
+            </div>
+
+            <!-- 主面板 -->
+            <div class="flex-1 grid grid-cols-3 gap-4 p-4 overflow-auto">
+                <!-- 机器人3D模型视图 -->
+                <div class="bg-gray-800 rounded-lg p-4 col-span-2 flex flex-col">
+                    <h3 class="text-sm font-medium mb-2">机器人姿态</h3>
+                    <div class="flex-1 neuron-grid flex items-center justify-center">
+                        <div class="text-center">
+                            <div class="text-4xl mb-2">🕷️</div>
+                            <p class="text-xs text-gray-400">3D模型加载区</p>
+                        </div>
+                    </div>
+                    <div class="mt-4 grid grid-cols-4 gap-2">
+                        <button class="bg-blue-600 hover:bg-blue-700 text-white py-1 px-2 rounded text-xs">站立</button>
+                        <button class="bg-blue-600 hover:bg-blue-700 text-white py-1 px-2 rounded text-xs">坐下</button>
+                        <button class="bg-blue-600 hover:bg-blue-700 text-white py-1 px-2 rounded text-xs">跳舞</button>
+                        <button class="bg-blue-600 hover:bg-blue-700 text-white py-1 px-2 rounded text-xs">挥手</button>
+                    </div>
+                </div>
+
+                <!-- 基本移动控制 -->
+                <div class="bg-gray-800 rounded-lg p-4">
+                    <h3 class="text-sm font-medium mb-2">基本移动</h3>
+                    <div class="grid grid-cols-3 gap-2">
+                        <div></div>
+                        <button onclick="sendCommand('forward')" class="bg-green-600 hover:bg-green-700 text-white py-2 rounded text-xs">前进</button>
+                        <div></div>
+                        <button onclick="sendCommand('left')" class="bg-green-600 hover:bg-green-700 text-white py-2 rounded text-xs">左转</button>
+                        <button class="bg-red-600 hover:bg-red-700 text-white py-2 rounded text-xs">停止</button>
+                        <button onclick="sendCommand('right')" class="bg-green-600 hover:bg-green-700 text-white py-2 rounded text-xs">右转</button>
+                        <div></div>
+                        <button onclick="sendCommand('backward')" class="bg-green-600 hover:bg-green-700 text-white py-2 rounded text-xs">后退</button>
+                        <div></div>
+                    </div>
+                </div>
+
+                <!-- 高级动作控制 -->
+                <div class="bg-gray-800 rounded-lg p-4">
+                    <h3 class="text-sm font-medium mb-2">高级动作</h3>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button class="bg-purple-600 hover:bg-purple-700 text-white py-1 px-2 rounded text-xs">身体左移</button>
+                        <button class="bg-purple-600 hover:bg-purple-700 text-white py-1 px-2 rounded text-xs">身体右移</button>
+                        <button class="bg-purple-600 hover:bg-purple-700 text-white py-1 px-2 rounded text-xs">头部上抬</button>
+                        <button class="bg-purple-600 hover:bg-purple-700 text-white py-1 px-2 rounded text-xs">头部下压</button>
+                        <button onclick="sendCommand('shake')" class="bg-yellow-600 hover:bg-yellow-700 text-white py-1 px-2 rounded text-xs">摇手</button>
+                        <button onclick="sendCommand('wave')" class="bg-yellow-600 hover:bg-yellow-700 text-white py-1 px-2 rounded text-xs">挥手</button>
+                    </div>
+                </div>
+
+                <!-- 电机调试面板 -->
+                <div class="bg-gray-800 rounded-lg p-4 col-span-3">
+                    <h3 class="text-sm font-medium mb-2">电机调试 (12个)</h3>
+                    <div class="grid grid-cols-4 gap-4">
+                        <div>
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="text-xs">腿部1-电机1</span>
+                                <span class="text-xs text-gray-400">45°</span>
+                            </div>
+                            <input type="range" min="0" max="180" value="45" class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer">
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="text-xs">腿部1-电机2</span>
+                                <span class="text-xs text-gray-400">90°</span>
+                            </div>
+                            <input type="range" min="0" max="180" value="90" class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer">
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="text-xs">腿部1-电机3</span>
+                                <span class="text-xs text-gray-400">135°</span>
+                            </div>
+                            <input type="range" min="0" max="180" value="135" class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer">
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="text-xs">腿部2-电机1</span>
+                                <span class="text-xs text-gray-400">45°</span>
+                            </div>
+                            <input type="range" min="0" max="180" value="45" class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer">
+                        </div>
+                    </div>
+                    <div class="mt-4 flex justify-between">
+                        <button class="text-xs bg-gray-700 hover:bg-gray-600 px-3 py-1 rounded">展开全部电机</button>
+                        <button class="text-xs bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded">保存当前配置</button>
+                    </div>
+                </div>
+
+                <!-- 气泵调试面板 -->
+                <div class="bg-gray-800 rounded-lg p-4 col-span-2">
+                    <h3 class="text-sm font-medium mb-2">气泵调试 (4个)</h3>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="text-xs">气泵1</span>
+                                <div class="relative w-16 h-6 bg-gray-700 rounded-full">
+                                    <div class="absolute left-0 top-0 w-8 h-6 bg-green-500 rounded-full"></div>
+                                </div>
+                            </div>
+                            <div class="gauge h-2 rounded-full mb-2"></div>
+                            <div class="flex justify-between text-xs text-gray-400">
+                                <span>0%</span>
+                                <span>50%</span>
+                                <span>100%</span>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="text-xs">气泵2</span>
+                                <div class="relative w-16 h-6 bg-gray-700 rounded-full">
+                                    <div class="absolute right-0 top-0 w-8 h-6 bg-red-500 rounded-full"></div>
+                                </div>
+                            </div>
+                            <div class="gauge h-2 rounded-full mb-2"></div>
+                            <div class="flex justify-between text-xs text-gray-400">
+                                <span>0%</span>
+                                <span>50%</span>
+                                <span>100%</span>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="text-xs">气泵3</span>
+                                <div class="relative w-16 h-6 bg-gray-700 rounded-full">
+                                    <div class="absolute left-0 top-0 w-4 h-6 bg-yellow-500 rounded-full"></div>
+                                </div>
+                            </div>
+                            <div class="gauge h-2 rounded-full mb-2"></div>
+                            <div class="flex justify-between text-xs text-gray-400">
+                                <span>0%</span>
+                                <span>50%</span>
+                                <span>100%</span>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="text-xs">气泵4</span>
+                                <div class="relative w-16 h-6 bg-gray-700 rounded-full">
+                                    <div class="absolute left-0 top-0 w-12 h-6 bg-green-500 rounded-full"></div>
+                                </div>
+                            </div>
+                            <div class="gauge h-2 rounded-full mb-2"></div>
+                            <div class="flex justify-between text-xs text-gray-400">
+                                <span>0%</span>
+                                <span>50%</span>
+                                <span>100%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 串口信息/日志 -->
+                <div class="bg-gray-800 rounded-lg p-4 col-span-3">
+                    <div class="flex justify-between items-center mb-2">
+                        <h3 class="text-sm font-medium">串口信息/日志</h3>
+                        <div class="flex space-x-2">
+                            <button onclick="clearSerialOutput()" class="text-xs bg-gray-700 hover:bg-gray-600 px-2 py-1 rounded">清空</button>
+                            <button onclick="saveSerialOutput()" class="text-xs bg-gray-700 hover:bg-gray-600 px-2 py-1 rounded">保存</button>
+                            <span id="connection-status" class="text-xs px-2 py-1 rounded bg-red-600">未连接</span>
+                        </div>
+                    </div>
+                    <div id="serialOutput" class="serial-console bg-black p-2 overflow-y-auto rounded">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    function sendCommand(command) {
+        fetch(`/cmd?cmd=${command}`)
+            .then(response => response.text())
+            .then(data => {
+                console.log('Command executed:', data);
+                // 在这里更新UI或显示反馈信息
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                // 处理错误
+            });
+    }
+
+    let ws = null;
+    const serialOutput = document.getElementById('serialOutput');
+    const connectionStatus = document.getElementById('connection-status');
+
+    function connectWebSocket() {
+        // 获取当前页面的主机名和端口号
+        const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+        const host = window.location.hostname;
+        const port = window.location.port;
+        
+        ws = new WebSocket(`${protocol}//${host}:${port}/ws`);
+
+        ws.onopen = function() {
+            connectionStatus.textContent = '已连接';
+            connectionStatus.classList.remove('bg-red-600');
+            connectionStatus.classList.add('bg-green-600');
+            appendToConsole('系统信息: WebSocket连接已建立', 'text-green-400');
+        };
+
+        ws.onclose = function() {
+            connectionStatus.textContent = '未连接';
+            connectionStatus.classList.remove('bg-green-600');
+            connectionStatus.classList.add('bg-red-600');
+            appendToConsole('系统信息: WebSocket连接已断开', 'text-red-400');
+            // 3秒后尝试重新连接
+            setTimeout(connectWebSocket, 3000);
+        };
+
+        ws.onmessage = function(event) {
+            appendToConsole(event.data, 'text-white');
+        };
+
+        ws.onerror = function(error) {
+            appendToConsole('错误: ' + error.message, 'text-red-400');
+        };
+    }
+
+    function appendToConsole(message, className = 'text-white') {
+        const div = document.createElement('div');
+        div.className = className;
+        div.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+        serialOutput.appendChild(div);
+        // 自动滚动到底部
+        serialOutput.scrollTop = serialOutput.scrollHeight;
+    }
+
+    function clearSerialOutput() {
+        serialOutput.innerHTML = '';
+        appendToConsole('控制台已清空', 'text-gray-400');
+    }
+
+    function saveSerialOutput() {
+        const text = Array.from(serialOutput.children)
+            .map(child => child.textContent)
+            .join('\n');
+        const blob = new Blob([text], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `serial_log_${new Date().toISOString().slice(0,19).replace(/:/g, '-')}.txt`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        appendToConsole('日志已保存', 'text-green-400');
+    }
+
+    // 页面加载完成后连接WebSocket
+    window.addEventListener('load', connectWebSocket);
+    </script>
+
+    <script>
+    const express = require('express');
+    const app = express();
+    const port = 3000;
+
+    app.get('/serial', (req, res) => {
+        // 模拟从串口读取数据
+        const serialData = '模拟串口数据';
+        res.send(serialData);
+    });
+
+    app.listen(port, () => {
+        console.log(`Server running at http://localhost:${port}`);
+    });
+    </script>
+</body>
+</html>
